@@ -21,10 +21,10 @@ public class ExcelReader {
 
 	private ExcelReader() {
 	}
-	
+
 	public static void main(String[] args) {
-		List<String> r =  read("C:\\Users\\Chan\\Desktop\\1.xlsx",6);
-		for(String str:r){
+		List<String> r = read("C:\\Users\\Chan\\Desktop\\1.xlsx", 6);
+		for (String str : r) {
 			System.out.println(str);
 		}
 	}
@@ -42,11 +42,10 @@ public class ExcelReader {
 		Workbook wb = null;
 		try {
 			// 判断文件是否为excel格式的文件
-			String fileType = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
 			is = new FileInputStream(filePath);
-			if (fileType.equals("xls")) {
+			if (filePath.endsWith("xls")) {
 				wb = new HSSFWorkbook(is);
-			} else if (fileType.equals("xlsx")) {
+			} else if (filePath.endsWith("xlsx")) {
 				wb = new XSSFWorkbook(is);
 			} else {
 				throw new Exception("读取的不是excel文件");
@@ -90,8 +89,11 @@ public class ExcelReader {
 
 	/**
 	 * 读取excel文件的指定列，将excel文件过滤空行转换为list。限定一个excel文件只能拥有一个sheet。
-	 * @param filePath 文件路径
-	 * @param index 指定列
+	 * 
+	 * @param filePath
+	 *            文件路径
+	 * @param index
+	 *            指定列
 	 * @return
 	 */
 	public static List<String> read(String filePath, int index) {
@@ -100,11 +102,10 @@ public class ExcelReader {
 		Workbook wb = null;
 		try {
 			// 判断文件是否为excel格式的文件
-			String fileType = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
 			is = new FileInputStream(filePath);
-			if (fileType.equals("xls")) {
+			if (filePath.endsWith("xls")) {
 				wb = new HSSFWorkbook(is);
-			} else if (fileType.equals("xlsx")) {
+			} else if (filePath.endsWith("xlsx")) {
 				wb = new XSSFWorkbook(is);
 			} else {
 				throw new Exception("读取的不是excel文件");
@@ -117,7 +118,7 @@ public class ExcelReader {
 			for (int i = 0; i < sheet.getLastRowNum() + 1; i++) {
 				// 遍历每一行
 				Row row = sheet.getRow(i);
-				if(maxRowNum < row.getLastCellNum()){
+				if (maxRowNum < row.getLastCellNum()) {
 					maxRowNum = row.getLastCellNum();
 				}
 				// 过滤空行
