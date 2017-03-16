@@ -1,4 +1,4 @@
-package com.hust.algorithm.kmeans;
+package com.hust.algorithm.canopy;
 
 import java.util.ArrayList;
 import java.util.List;
