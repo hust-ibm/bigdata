@@ -111,26 +111,25 @@ public class ExcelReader {
 			for (int i = 0; i < sheet.getLastRowNum() + 1; i++) {
 				// 遍历每一行
 				Row row = sheet.getRow(i);
-				if(row == null){
+				if (row == null) {
 					content.add("");
 					continue;
 				}
 				if (maxRowNum < row.getLastCellNum()) {
 					maxRowNum = row.getLastCellNum();
 				}
-				// 过滤空行
-				if (row != null) {
-					if (index + 1 > maxRowNum) {
-						System.out.println("读取的该行不存在。");
-						return null;
-					}
 
-					if (row.getCell(index) != null) {
-						content.add(row.getCell(index).getStringCellValue());
-					} else {
-						content.add("");
-					}
+				if (index + 1 > maxRowNum) {
+					System.out.println("读取的该行不存在。");
+					return null;
 				}
+
+				if (row.getCell(index) != null) {
+					content.add(row.getCell(index).getStringCellValue());
+				} else {
+					content.add("");
+				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
