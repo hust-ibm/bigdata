@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hust.algorithm.bayes.Training.ClusterInfo;
 import com.hust.segmentation.AnsjSegmentation;
@@ -40,6 +41,13 @@ public class NativeBayes {
 		clusterInfo = training.getClusterInfo();
 		priorPRsOfCluster = training.priorPRsOfCluster();
 		wordConitionalPRMap = training.getWordConditionalPRMap();
+		for(Map.Entry<String, double[]> map : wordConitionalPRMap.entrySet()){
+			System.out.print(map.getKey()+" ");
+			for(double d:map.getValue()){
+				System.out.print(d);
+			}
+			System.out.println();
+		}
 	}
 
 	private int classifySingleData(String[] cell) {
@@ -76,6 +84,7 @@ public class NativeBayes {
 		List<String> specifiedColData = ExcelReader.read(fileName, index);
 		AnsjSegmentation seg = new AnsjSegmentation();
 		seg.setWordList(specifiedColData);
+		seg.segment();
 		List<String[]> segList = seg.getSegList();
 		for (int i = 0; i < segList.size(); i++) {
 			int ci = classifySingleData(segList.get(i));
@@ -87,7 +96,7 @@ public class NativeBayes {
 		// TODO Auto-generated method stub
 		NativeBayes bayes = new NativeBayes();
 		bayes.training("result/cluster", 0);
-		bayes.classify("C:/Users/Chan/Desktop/test.xls", 0);
-	}
+		bayes.classify("C:/Users/Chan/Desktop/1.xls", 0);
+		}
 
 }
