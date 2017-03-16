@@ -59,6 +59,10 @@ public class AnsjSegmentation {
 			//用来存放分词后的结果
 			Result result = new Result(null);
 			//用精准分词模式得到一个未过滤的记过
+			if(word == null){
+				segList.add(new String[]{});
+				continue;
+			}
 			result = DicAnalysis.parse(word);
 			//将result去掉词性后（toStringWithOutNature）按（","）切分为一个一个的单词
 			listWithoutFilter.add(result.toStringWithOutNature().split(","));
