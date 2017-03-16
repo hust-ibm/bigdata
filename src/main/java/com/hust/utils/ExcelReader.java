@@ -22,15 +22,8 @@ public class ExcelReader {
 	private ExcelReader() {
 	}
 
-	public static void main(String[] args) {
-		List<String> r = read("C:\\Users\\Chan\\Desktop\\1.xlsx", 6);
-		for (String str : r) {
-			System.out.println(str);
-		}
-	}
-
 	/**
-	 * 读取excel文件，将excel文件过滤空行转换为list。限定一个excel文件只能拥有一个sheet。
+	 * 读取excel文件，将excel文件转换为list。限定一个excel文件只能拥有一个sheet。
 	 * 
 	 * @param filePath
 	 *            完全限定文件名
@@ -57,8 +50,8 @@ public class ExcelReader {
 			List<String> rowList = null;
 			for (int i = 0; i < sheet.getLastRowNum() + 1; i++) {
 				Row row = sheet.getRow(i);
+				rowList = new ArrayList<String>();
 				if (row != null) {
-					rowList = new ArrayList<String>();
 					for (int j = 0; j < row.getLastCellNum(); j++) {
 						if (row.getCell(j) == null) {
 							rowList.add("");
@@ -88,7 +81,7 @@ public class ExcelReader {
 	}
 
 	/**
-	 * 读取excel文件的指定列，将excel文件过滤空行转换为list。限定一个excel文件只能拥有一个sheet。
+	 * 读取excel文件的指定列，将excel文件转换为list。限定一个excel文件只能拥有一个sheet。
 	 * 
 	 * @param filePath
 	 *            文件路径
@@ -118,6 +111,10 @@ public class ExcelReader {
 			for (int i = 0; i < sheet.getLastRowNum() + 1; i++) {
 				// 遍历每一行
 				Row row = sheet.getRow(i);
+				if(row == null){
+					content.add("");
+					continue;
+				}
 				if (maxRowNum < row.getLastCellNum()) {
 					maxRowNum = row.getLastCellNum();
 				}
