@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hust.distance.CosDistance;
-import com.hust.utils.CosSimilarity;
 
 /**
  * Canopy聚类算法
@@ -79,6 +78,7 @@ public class Canopy {
 		//
 		CosDistance cosDistance = new CosDistance(vectors);
 		setT(cosDistance.getThreshold());
+		
 		//
 		resultIndex = new ArrayList<List<Integer>>();
 		List<Integer> tmpIndex = null;

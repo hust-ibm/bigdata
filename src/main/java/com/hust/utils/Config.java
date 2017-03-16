@@ -10,5 +10,5 @@ public class Config {
 	//Canopy聚类结果文件路径
 	public static String CANOPY_RESULT_PATH = "result/cluster/canopy/";
 	//KMeans聚类结果文件路径
-	public static String KMEANS_RESULT_PATH = "result/cluster/canopy/";
+	public static String KMEANS_RESULT_PATH = "result/cluster/kmeans/";
 }

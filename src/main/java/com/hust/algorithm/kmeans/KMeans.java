@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import com.hust.utils.CosSimilarity;
+import com.hust.distance.CosDistance;
 import com.hust.utils.VectorUtil;
 
 /**
@@ -37,7 +37,7 @@ public class KMeans {
 		private int iterTimes = 10;
 				
 		//
-		private CosSimilarity cosSim = new CosSimilarity();
+		private CosDistance cosDistance ;
 		
 		public KMeans(int k , List<double[]> vectors, int times){
 			//初始化K
@@ -47,6 +47,8 @@ public class KMeans {
 			
 			centers = new ArrayList<>();
 			resultIndex = new ArrayList<>();
+			
+			cosDistance = new CosDistance(vectors);
 		}
 		
 		public void initClusters(){
@@ -89,8 +91,8 @@ public class KMeans {
 					
 					//依次计算文本向量集中的向量与k个类簇中心的距离
 					for(int j = 0 ; j < K ; j++){
-						if(cosSim.calculate(vector, newcenters.get(j)) > maxSim){
-							maxSim = cosSim.calculate(vector, newcenters.get(j));
+						if(cosDistance.caculate(vector, newcenters.get(j)) > maxSim){
+							maxSim = cosDistance.caculate(vector, newcenters.get(j));
 							tmpIndex = j;
 						}
 					}
@@ -138,7 +140,7 @@ public class KMeans {
 			
 			double sum = 0f;
 			for(int i = 0 ; i < K ; i++){
-				sum += cosSim.calculate(centers.get(i), newcenters.get(i));
+				sum += cosDistance.caculate(centers.get(i), newcenters.get(i));
 			}
 			if(sum/centers.size() < T){
 				System.out.println(sum/centers.size());
@@ -173,12 +175,6 @@ public class KMeans {
 	                count++;
 	            }
 	        }
-
-//	        //遍历输出
-//	        for(int i : v){
-//	            System.out.println(i);
-//	        }
-	        
 	        return v;
 	    }
 		

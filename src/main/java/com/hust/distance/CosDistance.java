@@ -1,6 +1,5 @@
 package com.hust.distance;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import com.hust.utils.VectorUtils;

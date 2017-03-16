@@ -42,13 +42,12 @@ public class ExcelWriter {
         Sheet sheet = null;
         
         int lastRowNum = 0;
-        		
+                
+        //改文件已经存在		
         if(f.exists()){
         	try {
         		FileInputStream fs = new FileInputStream(fileName);  //获取文件
-        		POIFSFileSystem ps;
-			
-				ps = new POIFSFileSystem(fs);
+        		
 				//使用POI提供的方法得到excel的信息  
 				if (fileName.endsWith("xls")) {
 					wb = new HSSFWorkbook(fs);
@@ -65,14 +64,14 @@ public class ExcelWriter {
 				//如果表格存在就获取行数
 				lastRowNum = sheet.getLastRowNum() + 1;
 				
-				ps.close();
+				
 				fs.close();
         	} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
         }else{
-        	
+        	//文件不存在，新建的文件 判断文件类型
         	if (fileName.endsWith("xls")) {
 				wb = new HSSFWorkbook();
 				
@@ -85,8 +84,6 @@ public class ExcelWriter {
 			sheet = wb.createSheet();
         }
         
-        //设置表格默认宽度
-//        sheet.setDefaultColumnWidth(10*256);
         
         Row row = null; 
         
@@ -105,8 +102,8 @@ public class ExcelWriter {
              wb.write(fos);
                  
          } catch (FileNotFoundException e) {
-            System.out.println("导入数据前请关闭工作表");
-
+            System.out.println("文件找不到");
+            
           } catch ( Exception e) {
          	 System.out.println("没有进行筛选");
 
