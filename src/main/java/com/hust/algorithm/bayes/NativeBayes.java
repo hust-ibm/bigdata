@@ -1,7 +1,5 @@
 package com.hust.algorithm.bayes;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,25 +29,28 @@ public class NativeBayes {
 	 */
 	private HashMap<String, double[]> wordConitionalPRMap;
 
+	/**
+	 * 构造函数，对类成员变量进行初始化
+	 */
 	public NativeBayes() {
 		priorPRsOfCluster = null;
 		wordConitionalPRMap = new HashMap<String, double[]>();
 	}
 
+	/**
+	 * 对训练集进行训练，将得到的类信息、先验概率、条件概率存储在本类中
+	 */
 	public void training(String filePath, int index) {
+		// 利用Training类对训练集进行训练，filePath为测试集目录的绝对路径，index为读取excel
 		Training training = new Training(filePath, index);
 		clusterInfo = training.getClusterInfo();
 		priorPRsOfCluster = training.priorPRsOfCluster();
 		wordConitionalPRMap = training.getWordConditionalPRMap();
-		for(Map.Entry<String, double[]> map : wordConitionalPRMap.entrySet()){
-			System.out.print(map.getKey()+" ");
-			for(double d:map.getValue()){
-				System.out.print(d);
-			}
-			System.out.println();
-		}
 	}
 
+	/**
+	 * 对一条数据进行分类
+	 */
 	private int classifySingleData(String[] cell) {
 		// 文档d属于类Ci的概率
 		double[] prOfDBelongsToCi = new double[clusterInfo.getNumOfClusters()];
@@ -74,29 +75,28 @@ public class NativeBayes {
 				max = i;
 			}
 		}
-
 		return max;
 	}
 
+	/**
+	 * 对一个文件的数据进行分类
+	 */
 	public void classify(String fileName, int index) {
-		//读取excel
+		// 读取完整excel文件
 		List<List<String>> rawData = ExcelReader.read(fileName);
+		// 读取excel文件的指定一列
 		List<String> specifiedColData = ExcelReader.read(fileName, index);
+		// 对指定列进行分词
 		AnsjSegmentation seg = new AnsjSegmentation();
 		seg.setWordList(specifiedColData);
 		seg.segment();
 		List<String[]> segList = seg.getSegList();
 		for (int i = 0; i < segList.size(); i++) {
+			// 对该条数据利用训练集进行分类，返回类的索引
 			int ci = classifySingleData(segList.get(i));
-			ExcelWriter.rowListToExcel("result/classify/"+clusterInfo.getClustersName().get(ci), rawData.get(i));
+			// 将该条数据写入对应的类excel
+			ExcelWriter.rowListToExcel("result/classify/" + clusterInfo.getClustersName().get(ci), rawData.get(i));
 		}
 	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		NativeBayes bayes = new NativeBayes();
-		bayes.training("result/cluster", 0);
-		bayes.classify("C:/Users/Chan/Desktop/1.xls", 0);
-		}
 
 }
