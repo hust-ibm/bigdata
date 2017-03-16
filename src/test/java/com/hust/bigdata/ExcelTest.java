@@ -15,6 +15,6 @@ public class ExcelTest {
 		test.add("222");
 		test.add("333");
 				
-		ExcelWriter.rowListToExcel("E:\\四川项目\\测试数据\\list.xlsx", test);
+		ExcelWriter.rowListToExcel("E:/四川项目/测试数据/list.xls", test);
 	}
 }

@@ -1,7 +1,6 @@
 package com.hust.bigdata;
 
 import java.util.List;
-import java.util.Random;
 
 import com.hust.algorithm.canopy.Canopy;
 import com.hust.convertor.TFIDFConvertor;

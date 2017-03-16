@@ -109,7 +109,8 @@ public class ExcelWriter {
 
           } finally{
              try {
-                 if(fos!=null){
+                 if(fos!=null){                	 
+                	 wb.close();
                      fos.close();
                  }
              } catch (IOException e) {
