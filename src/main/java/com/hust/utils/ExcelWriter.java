@@ -56,8 +56,8 @@ public class ExcelWriter {
 				} else if (fileName.endsWith("xlsx")) {
 					wb = new XSSFWorkbook(fs);
 				} else {
-					System.out.println();
-					
+					System.out.println("文件类型不正确！");
+					return;
 				}
 				
 				sheet =  wb.getSheetAt(0);  //获取到工作表，因为一个excel可能有多个工作表  
@@ -72,8 +72,17 @@ public class ExcelWriter {
 				e.printStackTrace();
 			} 
         }else{
-        	wb = new HSSFWorkbook();
-        	sheet = wb.createSheet();
+        	
+        	if (fileName.endsWith("xls")) {
+				wb = new HSSFWorkbook();
+				
+			} else if (fileName.endsWith("xlsx")) {
+				wb = new XSSFWorkbook();
+			} else {
+				System.out.println("文件类型不正确！");
+				return;
+			}
+			sheet = wb.createSheet();
         }
         
         //设置表格默认宽度

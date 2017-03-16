@@ -100,9 +100,6 @@ public class Canopy {
 			boolean isFind = false;
 			
 			for(int j = 0 ; j < resultIndex.size() ; j++){
-				//得到第j个类的向量组
-//				List<double[]> tmpVectors = getTmpVector(resultIndex.get(j));
-//				CosSimilarity sim = new CosSimilarity();
 				//计算向量与已分的类的向量平均值是否大于阈值，大于则添加到该类
 				if(cosDistance.getDistance(i, resultIndex.get(j)) > T){
 					//获取待比较的那个类的所有元素的索引， 存放在tmpIndex

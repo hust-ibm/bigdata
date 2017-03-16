@@ -42,7 +42,7 @@ public class CanopyTest{
 		canopy.cluster();
 		
 		//聚类结果显示到控制台
-		ClusterUtil.showResult(canopy.getResultIndex(), dataList);
+//		ClusterUtil.showResult(canopy.getResultIndex(), dataList);
 		System.out.println("聚类个数："+canopy.getCanopy());
 
 		//聚类结果写入到文件
@@ -50,7 +50,7 @@ public class CanopyTest{
 		//把每个类的结果输出到一个Excel文件
 		for(int i = 0 ; i < clusterlist.size() ; i++){
 			//
-			ExcelWriter.colListToExcel(Config.CANOPY_RESULT_PATH+"canopy"+(i+1)+".xls", clusterlist.get(i));
+			ExcelWriter.colListToExcel(Config.CANOPY_RESULT_PATH+"canopy"+(i+1)+".xlsx", clusterlist.get(i));
 			
 		}
 	}
