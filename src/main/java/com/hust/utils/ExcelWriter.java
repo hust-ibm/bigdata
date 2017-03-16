@@ -11,6 +11,10 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * 数据导入到Excel工具类
@@ -34,8 +38,8 @@ public class ExcelWriter {
         FileOutputStream fos=null;
         File f=new File(fileName);
     	
-        HSSFWorkbook wb = null;
-        HSSFSheet sheet = null;
+        Workbook wb = null;
+        Sheet sheet = null;
         
         int lastRowNum = 0;
         		
@@ -46,8 +50,18 @@ public class ExcelWriter {
 			
 				ps = new POIFSFileSystem(fs);
 				//使用POI提供的方法得到excel的信息  
-				wb = new HSSFWorkbook(ps);    
-				sheet = wb.getSheetAt(0);  //获取到工作表，因为一个excel可能有多个工作表  
+				if (fileName.endsWith("xls")) {
+					wb = new HSSFWorkbook(fs);
+					
+				} else if (fileName.endsWith("xlsx")) {
+					wb = new XSSFWorkbook(fs);
+				} else {
+					System.out.println();
+					
+				}
+				
+				sheet =  wb.getSheetAt(0);  //获取到工作表，因为一个excel可能有多个工作表  
+				
 				//如果表格存在就获取行数
 				lastRowNum = sheet.getLastRowNum() + 1;
 				
@@ -65,7 +79,7 @@ public class ExcelWriter {
         //设置表格默认宽度
 //        sheet.setDefaultColumnWidth(10*256);
         
-        HSSFRow row = null; 
+        Row row = null; 
         
          for(int i = 0 ; i < rows ; i++){
             //

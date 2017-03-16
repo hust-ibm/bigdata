@@ -8,7 +8,7 @@ import java.util.List;
  * @author tankai
  *
  */
-public class ShowUtil {
+public class ClusterUtil {
 
 	
 	public static void showDatalist(List<String> list){
