@@ -16,6 +16,9 @@ import com.hust.utils.ExcelReader;
  *
  */
 public class Training {
+	/**
+	 * 类簇信息
+	 */
 	private ClusterInfo clusterInfo;
 	/**
 	 * 各类簇的先验概率。有n个类，double数组长度就为n。
@@ -26,13 +29,17 @@ public class Training {
 	 */
 	private HashMap<String, double[]> wordConditionalPRMap;
 
+	/**
+	 * 构造函数，进行初始化
+	 */
 	public Training(String fileDir, int index) {
 		if (!init(fileDir, index)) {
-			exit();
+			System.err.println("检查训练集文件夹结构是否合理。");
+			System.exit(0);
 		}
 	}
-	
-	public class ClusterInfo{
+
+	public class ClusterInfo {
 		/**
 		 * 类簇个数
 		 */
@@ -53,33 +60,43 @@ public class Training {
 		 * 存储各类簇的名字
 		 */
 		List<String> clustersName;
+
 		public int getNumOfClusters() {
 			return numOfClusters;
 		}
+
 		public void setNumOfClusters(int numOfClusters) {
 			this.numOfClusters = numOfClusters;
 		}
+
 		public int[] getClusterTotalWords() {
 			return clusterTotalWords;
 		}
+
 		public void setClusterTotalWords(int[] clusterTotalWords) {
 			this.clusterTotalWords = clusterTotalWords;
 		}
+
 		public int getWordBook() {
 			return wordBook;
 		}
+
 		public void setWordBook(int wordBook) {
 			this.wordBook = wordBook;
 		}
+
 		public List<List<String[]>> getClustersContent() {
 			return clustersContent;
 		}
+
 		public void setClustersContent(List<List<String[]>> clustersContent) {
 			this.clustersContent = clustersContent;
 		}
+
 		public List<String> getClustersName() {
 			return clustersName;
 		}
+
 		public void setClustersName(List<String> clustersName) {
 			this.clustersName = clustersName;
 		}
@@ -87,8 +104,6 @@ public class Training {
 
 	/**
 	 * 获取各类单词的条件概率
-	 * 
-	 * @return
 	 */
 	public HashMap<String, double[]> getWordConditionalPRMap() {
 		HashMap<String, int[]> wordFrequencyMap = getWordFrequencyMap();
@@ -117,22 +132,12 @@ public class Training {
 	}
 
 	/**
-	 * 获取各类簇的先验概率
-	 * @return
-	 */
-	public double[] priorPRsOfCluster() {
-		return priorPRsOfCluster;
-	}
-	
-	/**
 	 * 统计各类簇的词频
-	 * 
-	 * @return
 	 */
-	public HashMap<String, int[]> getWordFrequencyMap() {
+	private HashMap<String, int[]> getWordFrequencyMap() {
 		HashMap<String, int[]> wordFreqMap = new HashMap<String, int[]>();
-		for (int i=0; i<clusterInfo.getNumOfClusters(); i++) {
-			List<String[]> splitClusterContent=clusterInfo.getClustersContent().get(i);
+		for (int i = 0; i < clusterInfo.getNumOfClusters(); i++) {
+			List<String[]> splitClusterContent = clusterInfo.getClustersContent().get(i);
 			// 遍历该类下的每一条分词结果集
 			for (String[] words : splitClusterContent) {
 				// 遍历每一个分词结果集的单个单词
@@ -151,16 +156,22 @@ public class Training {
 		return wordFreqMap;
 	}
 
+	/**
+	 * 获取类的信息
+	 */
 	public ClusterInfo getClusterInfo() {
 		return clusterInfo;
 	}
 
 	/**
+	 * 获取各类簇的先验概率
+	 */
+	public double[] priorPRsOfCluster() {
+		return priorPRsOfCluster;
+	}
+
+	/**
 	 * 初始化
-	 * 
-	 * @param fileDir
-	 * @param index
-	 * @return
 	 */
 	private boolean init(String fileDir, int index) {
 		File rootDir = new File(fileDir);
@@ -170,10 +181,12 @@ public class Training {
 		File[] clusters = rootDir.listFiles();
 
 		clusterInfo = new ClusterInfo();
+		//获取类的个数
 		clusterInfo.setNumOfClusters(clusters.length);
 		this.priorPRsOfCluster = new double[clusters.length];
 		this.wordConditionalPRMap = new HashMap<String, double[]>();
 
+		//dataSize表示所有类加起来有多少条数据
 		int dataSize = 0;
 		List<String> clustersName = new ArrayList<String>();
 		List<List<String[]>> clustersContent = new ArrayList<List<String[]>>();
@@ -182,37 +195,31 @@ public class Training {
 				return false;
 			}
 			clustersName.add(cluster.getName());
-			//读取excel某列的内容
-			List<String> clusterContent = ExcelReader.read(cluster.getAbsolutePath(), index);
-			if(clusterContent == null){
+			// 读取excel某列的内容
+			List<String> clusterContent = ExcelReader.read(cluster.getAbsolutePath(), 
+					index);
+			if (clusterContent == null) {
 				System.err.println("读取excel文件出错...");
 				System.exit(0);
 			}
-			//将该excel的每一行进行分词
+			// 将该excel的每一行进行分词
 			AnsjSegmentation seg = new AnsjSegmentation();
 			seg.setWordList(clusterContent);
 			seg.segment();
 			clustersContent.add(seg.getSegList());
 			dataSize += clusterContent.size();
 		}
+		//存储类的名字
 		clusterInfo.setClustersName(clustersName);
+		//存储类的内容
 		clusterInfo.setClustersContent(clustersContent);
 
 		for (int i = 0; i < clustersContent.size(); i++) {
-			priorPRsOfCluster[i] = (double)clustersContent.get(i).size() / dataSize;
+			//计算类的先验概率，该类的数据数除以总的数据条数
+			priorPRsOfCluster[i] = (double) clustersContent.get(i).size() / 
+					dataSize;
 		}
 
 		return true;
 	}
-
-	private void exit() {
-		System.err.println("按规则录入 测试集 路径...检查当前目录是否包含非excel文件。");
-		System.out.println();
-		System.out.println("TrainingSet--->cluster1(excel文件)");
-		System.out.println("           --->cluster2(excel文件)");
-		System.out.println("           --->cluster3(excel文件)");
-		System.out.println("           --->clustern(excel文件)");
-		System.exit(0);
-	}
-
 }
