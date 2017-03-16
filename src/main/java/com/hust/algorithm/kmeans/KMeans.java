@@ -13,12 +13,7 @@ import com.hust.utils.VectorUtil;
  * @author tankai
  *
  */
-public class KMeans {
-		//原始文本
-		private List<String> datalist;
-		//分词后的文本
-		private List<String[]> seglist;
-		
+public class KMeans {		
 		//原始文本对应向量
 		private List<double[]> vectors;
 		
@@ -36,9 +31,10 @@ public class KMeans {
 		//迭代次数
 		private int iterTimes = 10;
 				
-		//
-		private CosDistance cosDistance ;
+		//用于相似度计算的类
+		private CosDistance cosDistance;
 		
+		//构造函数，进行初始化
 		public KMeans(int k , List<double[]> vectors, int times){
 			//初始化K
 			setK(k);
@@ -51,14 +47,15 @@ public class KMeans {
 			cosDistance = new CosDistance(vectors);
 		}
 		
+		//初始化K个初始聚类中心点--随机选择K个向量
 		public void initClusters(){
-			//初始化K个初始聚类中心点--随机选择K个向量
+			//得到随机数
 			Vector<Integer> vecIndex = random(K,vectors.size());
 			for(int i = 0 ; i < K ; i++){
+				//生成的第i个随机数对应的向量作为第i个中心
 				centers.add(vectors.get(vecIndex.get(i)));
-				
-				List<Integer> cluster = new ArrayList<>();
-//				cluster.add(vecIndex.get(i));
+				//存放下标
+				List<Integer> cluster = new ArrayList<>();				
 				resultIndex.add(cluster);
 			}
 		}
@@ -66,42 +63,34 @@ public class KMeans {
 		/**
 		 * KMeans聚类
 		 */		
-		public void cluster(){
-			
+		public void cluster(){			
 			//初始化聚类中心点、结果集
 			initClusters();
 			
 			//记录最大的相似度
 			double maxSim = 0f;
-			int tmpIndex = 0;
-			
+			int tmpIndex = 0;			
 			//新中心点
-			newcenters = centers;
-			
+			newcenters = centers;			
 			//开始迭代
-			while(iterTimes > 0){
-				
+			while(iterTimes > 0){				
 				iterTimes--;
 				//遍历所有向量，
 				for(int i = 0 ; i < vectors.size() ; i++){
-					double[] vector = vectors.get(i);
-					
+					double[] vector = vectors.get(i);					
 					//相似度置0
-					maxSim = 0;
-					
+					maxSim = 0;					
 					//依次计算文本向量集中的向量与k个类簇中心的距离
 					for(int j = 0 ; j < K ; j++){
 						if(cosDistance.caculate(vector, newcenters.get(j)) > maxSim){
 							maxSim = cosDistance.caculate(vector, newcenters.get(j));
 							tmpIndex = j;
 						}
-					}
-					
+					}					
 					//把文本向量集中的每一个向量对应的索引加入最近的类簇中心集合中
 					resultIndex.get(tmpIndex).add(i);
 					
-				}
-				
+				}				
 				//重新计算每个类簇的类簇中心
 				for(int i = 0 ; i < resultIndex.size() ; i++){
 					List<Integer> cluster = resultIndex.get(i);
@@ -110,17 +99,14 @@ public class KMeans {
 						sum = VectorUtil.add(sum, vectors.get(j));
 					}
 					newcenters.set(i, VectorUtil.center(sum,cluster.size()));
-				}
-				
+				}				
 				//判断新簇中心相对于旧中心移动的距离是否在条件内
 				if(!centerMove(centers, newcenters)){
 					centers = newcenters;
 					break;
-				}
-				
+				}				
 				//形成新的类簇中心
-				centers = newcenters;
-				
+				centers = newcenters;				
 				//清除掉结果集里的数据，继续迭代
 				resultIndex.clear();				
 			}
@@ -158,16 +144,12 @@ public class KMeans {
 		private Vector<Integer> random(int K, int size) {
 	        //创建一个产生随机数的对象
 	        Random r = new Random();
-
 	        //创建一个存储随机数的集合
 	        Vector<Integer> v = new Vector<Integer>();
-
 	        //定义一个统计变量
 	        int count = 0;
-
 	        while(count < K){
 	            int number = r.nextInt(size);
-
 	            //判断number是否在集合中存在
 	            if(!v.contains(number)){
 	                //不在集合中，就添加
@@ -178,23 +160,6 @@ public class KMeans {
 	        return v;
 	    }
 		
-		
-		public List<String> getDatalist() {
-			return datalist;
-		}
-
-		public void setDatalist(List<String> datalist) {
-			this.datalist = datalist;
-		}
-
-		public List<String[]> getSeglist() {
-			return seglist;
-		}
-
-		public void setSeglist(List<String[]> seglist) {
-			this.seglist = seglist;
-		}
-
 		public List<double[]> getVectors() {
 			return vectors;
 		}
