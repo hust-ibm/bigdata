@@ -57,7 +57,7 @@ public class ExcelWriter {
              for(int j=0;j<cell.length;j++){
                  cell[j]=row[i].createCell(j);
                  cell[j].setCellValue(convertString(value[i][j]));
-                 System.out.println(cell[j]);
+                 
 //                 第一行文字样式
 //                 if(i==0)
 //                   cell[j].setCellStyle(ztStyle);                  
