@@ -1,12 +1,18 @@
 package com.hust.segmentation;
 
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ansj.domain.Result;
 import org.ansj.domain.Term;
+import org.ansj.library.DicLibrary;
+import org.ansj.library.StopLibrary;
 import org.ansj.recognition.Recognition;
+import org.ansj.recognition.arrimpl.UserDefineRecognition;
 import org.ansj.recognition.impl.StopRecognition;
+import org.ansj.splitWord.analysis.DicAnalysis;
+import org.ansj.splitWord.analysis.NlpAnalysis;
 import org.ansj.splitWord.analysis.ToAnalysis;
 
 import com.hust.utils.Config;
@@ -19,6 +25,8 @@ public class AnsjSegmentation {
 	private  List<String[]> segList;
 	//停用词表的存放路径
 	private static String stopWordsPath = Config.stopWordPath;
+	//用户词表的存放路径
+	private static String userWordsPath = Config.userWordsPath;
 	//用来存放未过滤停用词的结果
 	private List<String[]> listWithoutFilter = new ArrayList<String[]>();
 	private static StopRecognition filter;
@@ -29,14 +37,21 @@ public class AnsjSegmentation {
 		filter.insertStopWords(list);
 		System.out.println("停用词加载成功！");
 	}
-	
+	//添加用户自定义词典
+	static{
+		List<String> list = new TxtReader().getDataFromTxt(userWordsPath);
+		for (String str : list) {
+			DicLibrary.insert(DicLibrary.DEFAULT, str);
+		}
+		
+	}
 	//初始化变量
 	public AnsjSegmentation(){
 		wordList  = new ArrayList<String>();
 		segList = new ArrayList<String[]>();
 	}
 	
-	//分词实现（精准分词）
+	//分词实现（用户自定义分词）
 	public void segment() {
 		// TODO Auto-generated method stub
 		//循环，处理一句一句的分词
@@ -44,7 +59,11 @@ public class AnsjSegmentation {
 			//用来存放分词后的结果
 			Result result = new Result(null);
 			//用精准分词模式得到一个未过滤的记过
-			result = ToAnalysis.parse(word);
+			if(word == null){
+				segList.add(new String[]{});
+				continue;
+			}
+			result = DicAnalysis.parse(word);
 			//将result去掉词性后（toStringWithOutNature）按（","）切分为一个一个的单词
 			listWithoutFilter.add(result.toStringWithOutNature().split(","));
 			//过滤停用词
@@ -57,12 +76,17 @@ public class AnsjSegmentation {
 		return listWithoutFilter;
 	}
 	
-	//将给定string经过过滤停用词分词为一个str数字（一个一个的词语）
-	public String[] segment(String str) {
+	//将给定string经过过滤停用词分词为一个str数组（一个一个的词语）
+	public String[] segmentToArray(String str) {
 		// TODO Auto-generated method stub		
 		return ToAnalysis.parse(str).recognition(filter).toStringWithOutNature().split(",");
 	}
-
+	//将给定string经过过滤停用词分词为一个str（以,分隔每个词语）
+	public String segmentToString(String str) {
+		// TODO Auto-generated method stub		
+		return ToAnalysis.parse(str).recognition(filter).toStringWithOutNature();
+	}
+	
 	public List<String[]> getSegList() {
 		return segList;
 	}
