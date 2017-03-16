@@ -61,4 +61,22 @@ public class CosDistance{
 		}
 		return sum/list.size();
 	}
+	
+	/**
+	 * 获取Canopy阈值
+	 * 即所有向量相似度的平均值
+	 * @return
+	 */
+	public double getThreshold(){
+		double sum = 0f;
+		int n = matrix.length;
+		for(int i = 0 ; i < n ; i++){
+			
+			for(int j = 0 ; j < i ; j++){
+				sum += matrix[i][j];
+			}
+		}
+		
+		return sum / ( n * (n-1)/2);
+	}
 }

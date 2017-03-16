@@ -50,6 +50,9 @@ public class ExcelWriter {
 				sheet = wb.getSheetAt(0);  //获取到工作表，因为一个excel可能有多个工作表  
 				//如果表格存在就获取行数
 				lastRowNum = sheet.getLastRowNum() + 1;
+				
+				ps.close();
+				fs.close();
         	} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -60,7 +63,7 @@ public class ExcelWriter {
         }
         
         //设置表格默认宽度
-        sheet.setDefaultColumnWidth(10*256);
+//        sheet.setDefaultColumnWidth(10*256);
         
         HSSFRow row = null; 
         

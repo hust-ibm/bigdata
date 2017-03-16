@@ -1,5 +1,6 @@
 package com.hust.utils;
 
+
 public class VectorUtil {
 
 	public static double[] add(double[] a , double[] b){
@@ -16,4 +17,6 @@ public class VectorUtil {
 		}
 		return a;
 	}
+	
+	
 }

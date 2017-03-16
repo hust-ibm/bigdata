@@ -3,6 +3,7 @@ package com.hust.algorithm.canopy;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hust.distance.CosDistance;
 import com.hust.utils.CosSimilarity;
 
 /**
@@ -23,8 +24,16 @@ public class Canopy {
 	//聚类结果对应的下标
 	private List<List<Integer>> resultIndex;
 
+	public List<List<Integer>> getResultIndex() {
+		return resultIndex;
+	}
+
+	public void setResultIndex(List<List<Integer>> resultIndex) {
+		this.resultIndex = resultIndex;
+	}
+
 	//Canopy初始阈值
-	private double threshold = 0f;
+	private double T = 0f;
 	
 	//聚类结果类别数量
 	private int canopy = 0;
@@ -53,24 +62,30 @@ public class Canopy {
 		this.vectors = vectors;
 	}
 
-	public double getThreshold() {
-		return threshold;
+	public double getT() {
+		return T;
 	}
 
-	public void setThreshold(double threshold) {
-		this.threshold = threshold;
+	public void setT(double T) {
+		this.T = T;
 	}
 
 	public int getCanopy() {
 		return canopy;
 	}
 
+	//canopy算法 
 	public void cluster(){		
-		//canopy算法
+		//
+		CosDistance cosDistance = new CosDistance(vectors);
+		setT(cosDistance.getThreshold());
+		//
 		resultIndex = new ArrayList<List<Integer>>();
 		List<Integer> tmpIndex = null;
+		
+		//遍历向量集合
 		for(int i = 0 ; i < vectors.size() ; i++){
-			double[] vector = vectors.get(i);
+//			double[] vector = vectors.get(i);
 			//i = 0 一个类都没有时，直接添加进resultIndex。
 			if(i == 0){
 				//把第1个向量的索引添加到tmpIndex，作为第一个类
@@ -86,10 +101,10 @@ public class Canopy {
 			
 			for(int j = 0 ; j < resultIndex.size() ; j++){
 				//得到第j个类的向量组
-				List<double[]> tmpVectors = getTmpVector(resultIndex.get(j));
-				CosSimilarity sim = new CosSimilarity();
+//				List<double[]> tmpVectors = getTmpVector(resultIndex.get(j));
+//				CosSimilarity sim = new CosSimilarity();
 				//计算向量与已分的类的向量平均值是否大于阈值，大于则添加到该类
-				if(sim.calculate(vector,tmpVectors) > threshold){
+				if(cosDistance.getDistance(i, resultIndex.get(j)) > T){
 					//获取待比较的那个类的所有元素的索引， 存放在tmpIndex
 					tmpIndex = resultIndex.get(j);
 					
@@ -118,49 +133,5 @@ public class Canopy {
 		canopy = resultIndex.size();
 		
 	}	
-
-	public List<double[]> getTmpVector(List<Integer> list){
-		List<double[]> tmp = new ArrayList<double[]>();
-		for(int i = 0 ; i < list.size() ; i++){
-			tmp.add(vectors.get(list.get(i)));
-		}
-		return tmp;
-	}
 	
-	/**
-	 * 显示分词后的文本结果
-	 */
-	public void showSeglist(){
-		for(String[] s:seglist){
-			for(String str:s){
-				System.out.print(str+" ");
-			}
-			System.out.println();
-		}
-	}
-	
-	/**
-	 * 显示文本向量空间
-	 */
-	public void showVectors(){
-		for(double[] v : vectors ){
-			for(double d :v){
-				System.out.print(String.format("%4.2f", d)+" ");
-			}
-			System.out.println();
-		}
-	}
-	/**
-	 * 显示聚类结果
-	 */
-	public void showResult(){
-		System.out.println("Canopy个数:"+canopy);
-		for(int i = 0 ; i < resultIndex.size() ; i++){
-			List<Integer> tmpIndex = resultIndex.get(i);
-			for(int j = 0 ; j < tmpIndex.size() ; j++){
-				System.out.println(datalist.get(tmpIndex.get(j)));
-			}
-			System.out.println();			
-		}
-	}
 }
