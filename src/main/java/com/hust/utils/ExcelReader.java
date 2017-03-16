@@ -36,9 +36,9 @@ public class ExcelReader {
 		try {
 			// 判断文件是否为excel格式的文件
 			is = new FileInputStream(filePath);
-			if (filePath.endsWith("xls")) {
+			if (filePath.endsWith(".xls")) {
 				wb = new HSSFWorkbook(is);
-			} else if (filePath.endsWith("xlsx")) {
+			} else if (filePath.endsWith(".xlsx")) {
 				wb = new XSSFWorkbook(is);
 			} else {
 				throw new Exception("读取的不是excel文件");
@@ -56,7 +56,11 @@ public class ExcelReader {
 						if (row.getCell(j) == null) {
 							rowList.add("");
 						} else {
-							rowList.add(row.getCell(j).getStringCellValue());
+							try{
+								rowList.add(row.getCell(j).getStringCellValue());
+							}catch(Exception e){
+								continue;
+							}
 						}
 					}
 				}
@@ -96,12 +100,13 @@ public class ExcelReader {
 		try {
 			// 判断文件是否为excel格式的文件
 			is = new FileInputStream(filePath);
-			if (filePath.endsWith("xls")) {
+			if (filePath.endsWith(".xls")) {
 				wb = new HSSFWorkbook(is);
-			} else if (filePath.endsWith("xlsx")) {
+			} else if (filePath.endsWith(".xlsx")) {
 				wb = new XSSFWorkbook(is);
 			} else {
-				throw new Exception("读取的不是excel文件");
+				System.err.println("读取的不是excel文件");
+				System.exit(0);
 			}
 
 			// 遍历excel，将结果存储在content中
@@ -111,26 +116,25 @@ public class ExcelReader {
 			for (int i = 0; i < sheet.getLastRowNum() + 1; i++) {
 				// 遍历每一行
 				Row row = sheet.getRow(i);
-				if(row == null){
+				if (row == null) {
 					content.add("");
 					continue;
 				}
 				if (maxRowNum < row.getLastCellNum()) {
 					maxRowNum = row.getLastCellNum();
 				}
-				// 过滤空行
-				if (row != null) {
-					if (index + 1 > maxRowNum) {
-						System.out.println("读取的该行不存在。");
-						return null;
-					}
 
-					if (row.getCell(index) != null) {
-						content.add(row.getCell(index).getStringCellValue());
-					} else {
-						content.add("");
-					}
+				if (index + 1 > maxRowNum) {
+					System.out.println("读取的该行不存在。");
+					return null;
 				}
+
+				if (row.getCell(index) != null) {
+					content.add(row.getCell(index).getStringCellValue());
+				} else {
+					content.add("");
+				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
