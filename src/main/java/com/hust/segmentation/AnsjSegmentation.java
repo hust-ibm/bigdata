@@ -70,6 +70,10 @@ public class AnsjSegmentation {
 			listWithoutFilter.add(result.toStringWithOutNature().split(","));
 			// 过滤停用词
 			result = result.recognition(filter);
+			if(result.size() == 0){
+				segList.add(new String[] {});
+				continue;
+			}
 			segList.add(result.toStringWithOutNature().split(","));
 		}
 	}

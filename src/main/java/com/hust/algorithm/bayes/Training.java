@@ -184,6 +184,10 @@ public class Training {
 			clustersName.add(cluster.getName());
 			//读取excel某列的内容
 			List<String> clusterContent = ExcelReader.read(cluster.getAbsolutePath(), index);
+			if(clusterContent == null){
+				System.err.println("读取excel文件出错...");
+				System.exit(0);
+			}
 			//将该excel的每一行进行分词
 			AnsjSegmentation seg = new AnsjSegmentation();
 			seg.setWordList(clusterContent);
