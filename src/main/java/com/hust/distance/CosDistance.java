@@ -17,8 +17,7 @@ public class CosDistance{
 	}
 	
 	//初始化操作，用来初始化相似度矩形，对角线上的设为1，其余的为计算后向量间的相似度值，<i,j>与<j,i>相似度值一样所以该矩阵是一个对称矩阵
-	private void init() {
-		
+	private void init() {		
 		matrix = new double[vectors.size()][vectors.size()];
 		for (int i = 0; i < vectors.size(); i++) {
 			for (int j = i; j < vectors.size(); j++) {
@@ -38,19 +37,16 @@ public class CosDistance{
 		}
 	}
 //获取指定向量之间的相似度（i,j是向量在list集合中的位置）	
-	public double getDistance(int i, int j){
-		
+	public double getDistance(int i, int j){		
 		return matrix[i][j];
 	}
 
 //计算两个给定向量的相似度
 	public double caculate(double[] vec1, double[] vec2) {
-		// TODO Auto-generated method stub
 		return VectorUtils.multiply(vec1, vec2)/(VectorUtils.module(vec1)*VectorUtils.module(vec2));
 	}
 //计算一个向量与一个向量集合的相似度，及计算该向量与集合中向量相似度的平均值（向量来源是通过下标得到的）
 	public double getDistance(int index, List<Integer> list) {
-		// TODO Auto-generated method stub
 		double sum = 0;
 		for (int i = 0; i < list.size(); i++) {
 			sum += getDistance(index, list.get(i));
@@ -59,12 +55,10 @@ public class CosDistance{
 	}
 //计算一个向量与一个向量集合的相似度，及计算该向量与集合中向量相似度的平均值
 	public double getDistance(double[] vector, List<double[]> list) {
-		// TODO Auto-generated method stub
 		double sum = 0;
 		for (int i = 0; i < list.size(); i++) {
 			sum += caculate(vector,list.get(i));
 		}
 		return sum/list.size();
 	}
-
 }
