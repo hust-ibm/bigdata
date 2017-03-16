@@ -12,7 +12,11 @@ import org.ansj.splitWord.analysis.ToAnalysis;
 import com.hust.utils.Config;
 import com.hust.utils.TxtReader;
 
-public class AnsjSegmentation extends Segmentation {
+public class AnsjSegmentation {
+	//文档集合
+	private List<String> wordList;
+	//分词后的集合存放
+	private  List<String[]> segList;
 	//停用词表的存放路径
 	private static String stopWordsPath = Config.stopWordPath;
 	//用来存放未过滤停用词的结果
@@ -25,8 +29,14 @@ public class AnsjSegmentation extends Segmentation {
 		filter.insertStopWords(list);
 		System.out.println("停用词加载成功！");
 	}
+	
+	//初始化变量
+	public AnsjSegmentation(){
+		wordList  = new ArrayList<String>();
+		segList = new ArrayList<String[]>();
+	}
+	
 	//分词实现（精准分词）
-	@Override
 	public void segment() {
 		// TODO Auto-generated method stub
 		//循环，处理一句一句的分词
@@ -46,12 +56,21 @@ public class AnsjSegmentation extends Segmentation {
 	public List<String[]> getListWithoutFilter() {
 		return listWithoutFilter;
 	}
+	
 	//将给定string经过过滤停用词分词为一个str数字（一个一个的词语）
-	@Override
 	public String[] segment(String str) {
 		// TODO Auto-generated method stub		
 		return ToAnalysis.parse(str).recognition(filter).toStringWithOutNature().split(",");
 	}
+
+	public List<String[]> getSegList() {
+		return segList;
+	}
+
+	public void setWordList(List<String> wordList) {
+		this.wordList = wordList;
+	}
+	
 	
 
 }
