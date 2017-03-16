@@ -14,15 +14,21 @@ import com.hust.utils.TxtReader;
 
 public class AnsjSegmentation extends Segmentation {
 	//停用词表的存放路径
-	private String stopWordsPath = Config.stopWordPath;
+	private static String stopWordsPath = Config.stopWordPath;
 	//用来存放未过滤停用词的结果
 	private List<String[]> listWithoutFilter = new ArrayList<String[]>();
-
+	private static StopRecognition filter;
+	//加载停用词
+	static{
+		List<String> list = new TxtReader().getDataFromTxt(stopWordsPath);
+		filter = new StopRecognition();
+		filter.insertStopWords(list);
+		System.out.println("停用词加载成功！");
+	}
 	//分词实现（精准分词）
 	@Override
 	public void segment() {
 		// TODO Auto-generated method stub
-		Recognition recognition = getStopWordsFilter();
 		//循环，处理一句一句的分词
 		for (String word : wordList) {
 			//用来存放分词后的结果
@@ -32,17 +38,9 @@ public class AnsjSegmentation extends Segmentation {
 			//将result去掉词性后（toStringWithOutNature）按（","）切分为一个一个的单词
 			listWithoutFilter.add(result.toStringWithOutNature().split(","));
 			//过滤停用词
-			result = result.recognition(recognition);
+			result = result.recognition(filter);
 			segList.add(result.toStringWithOutNature().split(","));
 		}
-	}
-
-	private Recognition getStopWordsFilter(){
-		List<String> list = new TxtReader().getDataFromTxt(stopWordsPath);
-		StopRecognition filter = new StopRecognition();
-		filter.insertStopWords(list);
-		System.out.println("停用词加载成功！");
-		return filter;
 	}
 
 	public List<String[]> getListWithoutFilter() {
@@ -52,9 +50,8 @@ public class AnsjSegmentation extends Segmentation {
 	@Override
 	public String[] segment(String str) {
 		// TODO Auto-generated method stub		
-		return ToAnalysis.parse(str).recognition(getStopWordsFilter()).toStringWithOutNature().split(",");
+		return ToAnalysis.parse(str).recognition(filter).toStringWithOutNature().split(",");
 	}
-	
 	
 
 }
