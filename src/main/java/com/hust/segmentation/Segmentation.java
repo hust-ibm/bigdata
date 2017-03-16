@@ -20,4 +20,6 @@ public abstract class Segmentation {
 	
 	public abstract void segment();
 	
+	public abstract String[] segment(String str);
+	
 }

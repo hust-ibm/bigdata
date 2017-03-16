@@ -48,6 +48,12 @@ public class AnsjSegmentation extends Segmentation {
 	public List<String[]> getListWithoutFilter() {
 		return listWithoutFilter;
 	}
+	//将给定string经过过滤停用词分词为一个str数字（一个一个的词语）
+	@Override
+	public String[] segment(String str) {
+		// TODO Auto-generated method stub		
+		return ToAnalysis.parse(str).recognition(getStopWordsFilter()).toStringWithOutNature().split(",");
+	}
 	
 	
 
