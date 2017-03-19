@@ -19,7 +19,7 @@ public class KMeansTest{
 	public static void main(String[] args) {
 		start = System.currentTimeMillis();	
 		//读取原始数据
-		List<String> dataList = ExcelReader.read("E:/测试数据/聚类/原始数据/前程无忧9636.xlsx",1);
+		List<String> dataList = ExcelReader.read("E:/测试数据/聚类/原始数据/前程无忧一列数据.xls",0);
 		
 //		ClusterUtil.showDatalist(dataList);
 		//分词
@@ -34,24 +34,24 @@ public class KMeansTest{
 		//向量转换
 		TFIDFConvertor convertor = new TFIDFConvertor(seglist);
 		List<double[]> vectors = convertor.getVector();
-//		Canopy canopy = new Canopy();
-//		canopy.setVectors(vectors);
-//		
-//		
-//		//进行Canopy聚类
-//		canopy.cluster();
-//		
-//		//查看canopy阈值
-//		System.out.println("计算的平均阈值："+canopy.getT());
+		Canopy canopy = new Canopy();
+		canopy.setVectors(vectors);
+		
+		
+		//进行Canopy聚类
+		canopy.cluster();
+		
+		//查看canopy阈值
+		System.out.println("计算的平均阈值："+canopy.getT());
 //		
 //		
 //		//聚类结果显示到控制台
-////		ClusterUtil.showResult(canopy.getResultIndex(), dataList);
+//		ClusterUtil.showResult(canopy.getResultIndex(), dataList);
 //		System.out.println("聚类个数："+canopy.getCanopy());
 //
 //		
 		//初始化KMeans聚类参数 （K值--Canopy聚类的个数，向量集合，迭代次数）
-		KMeans kmeans = new KMeans(300, vectors, 10);
+		KMeans kmeans = new KMeans(10, vectors, 20);
 		
 		//进行KMeans聚类
 		kmeans.cluster();

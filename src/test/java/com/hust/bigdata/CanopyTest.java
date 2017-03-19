@@ -17,11 +17,11 @@ public class CanopyTest{
 	private static long end;
 	
 	public static void main(String[] args) {
-		start = System.currentTimeMillis();
+//		start = System.currentTimeMillis();
 		//读取原始数据
-		List<String> dataList = ExcelReader.read("E:/测试数据/聚类/原始数据/前程无忧9000一列.xls",0);
-		end = System.currentTimeMillis();
-		System.out.println("读数据耗时："+(end-start));
+		List<String> dataList = ExcelReader.read("E:/测试数据/聚类/原始数据/前程无忧一列数据.xls",0);
+//		end = System.currentTimeMillis();
+//		System.out.println("读数据耗时："+(end-start));
 //		ClusterUtil.showDatalist(dataList);
 		//分词
 		AnsjSegmentation ansj = new AnsjSegmentation();
@@ -40,17 +40,17 @@ public class CanopyTest{
 
 		//设置阈值
 //		canopy.setT(0.15);
-		start = System.currentTimeMillis();
+//		start = System.currentTimeMillis();
 		//进行Canopy聚类
 		canopy.cluster();
-		end = System.currentTimeMillis();
-		System.out.println("聚类耗时："+(end-start));
+//		end = System.currentTimeMillis();
+//		System.out.println("聚类耗时："+(end-start));
 		//查看canopy阈值
 		System.out.println("计算的平均阈值："+canopy.getT());
 		
 		
 		//聚类结果显示到控制台
-//		ClusterUtil.showResult(canopy.getResultIndex(), dataList);
+		ClusterUtil.showResult(canopy.getResultIndex(), dataList);
 		System.out.println("聚类个数："+canopy.getCanopy());
 
 		//聚类结果写入到文件

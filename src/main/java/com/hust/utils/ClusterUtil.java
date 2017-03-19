@@ -52,6 +52,7 @@ public class ClusterUtil {
 			if(tmpIndex == null && tmpIndex.size() == 0){
 				continue;	
 			}
+			System.out.println("类别"+i+":"+datalist.get(tmpIndex.get(0)));
 			for(int j = 0 ; j < tmpIndex.size() ; j++){
 				System.out.println(datalist.get(tmpIndex.get(j)));
 			}
@@ -119,7 +120,7 @@ public class ClusterUtil {
 	 * @return
 	 */
 	public static String stringFilter(String s){
-		String regEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]"; 
+		String regEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？0123456789]"; 
 		Pattern p = Pattern.compile(regEx); 
 		Matcher m = p.matcher(s);
 		return m.replaceAll("").trim();
