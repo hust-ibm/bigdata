@@ -22,5 +22,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jsoup-1.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/WebCollector-2.40-beta.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

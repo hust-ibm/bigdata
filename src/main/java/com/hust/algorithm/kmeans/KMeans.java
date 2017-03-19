@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import com.hust.distance.CosDistance;
+import com.hust.utils.ClusterUtil;
 import com.hust.utils.VectorUtil;
 
 /**
@@ -110,6 +111,8 @@ public class KMeans {
 				//清除掉结果集里的数据，继续迭代
 				resultIndex.clear();				
 			}
+			
+			resultIndex = ClusterUtil.delNullCluster(resultIndex);
 		}
 
 		/**

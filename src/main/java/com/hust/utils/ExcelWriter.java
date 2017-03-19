@@ -100,22 +100,13 @@ public class ExcelWriter {
          try {
              fos=new FileOutputStream(f);
              wb.write(fos);
-                 
-         } catch (FileNotFoundException e) {
-            System.out.println("文件找不到");
-            
-          } catch ( Exception e) {
-         	 System.out.println("没有进行筛选");
+             wb.close();
+             fos.close();
+         }  catch ( Exception e) {
+         	 System.out.println("写入文件出错");
+         	 e.printStackTrace();
 
-          } finally{
-             try {
-                 if(fos!=null){                	 
-                	 wb.close();
-                     fos.close();
-                 }
-             } catch (IOException e) {
-              }
-         }
+          } 
     }
 	
 	
@@ -132,7 +123,7 @@ public class ExcelWriter {
     			cols = list.get(i).size();
     		}
     	}
-    	System.out.println(rows+";"+cols);
+
     	Object[][] value = new Object[rows][cols];
     	
     	for(int i = 0 ; i < rows ; i++){

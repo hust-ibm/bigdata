@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hust.distance.CosDistance;
+import com.hust.utils.ClusterUtil;
 
 /**
  * Canopy聚类算法
@@ -30,7 +31,9 @@ public class Canopy {
 	public void cluster(){		
 		//初始化cosDistance类
 		cosDistance = new CosDistance(vectors);
-		setT(cosDistance.getThreshold());		
+		if(T == 0 ){
+			setT(cosDistance.getThreshold());	
+		}
 		//初始化聚类结果集
 		resultIndex = new ArrayList<List<Integer>>();
 		List<Integer> tmpIndex = null;		
@@ -74,6 +77,9 @@ public class Canopy {
 				resultIndex.add(tmpIndex);
 			}
 		}
+		
+		resultIndex = ClusterUtil.delNullCluster(resultIndex);
+		
 		//获取聚类的数量
 		canopy = resultIndex.size();
 		
