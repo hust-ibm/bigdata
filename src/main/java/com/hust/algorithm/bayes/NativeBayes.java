@@ -1,5 +1,6 @@
 package com.hust.algorithm.bayes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,18 @@ public class NativeBayes {
 	public NativeBayes() {
 		priorPRsOfCluster = null;
 		wordConitionalPRMap = new HashMap<String, double[]>();
+	}
+
+	public ClusterInfo getClusterInfo() {
+		return clusterInfo;
+	}
+
+	public double[] getPriorPRsOfCluster() {
+		return priorPRsOfCluster;
+	}
+
+	public HashMap<String, double[]> getWordConitionalPRMap() {
+		return wordConitionalPRMap;
 	}
 
 	/**
@@ -82,6 +95,8 @@ public class NativeBayes {
 	 * 对一个文件的数据进行分类
 	 */
 	public void classify(String fileName, int index) {
+		HashMap<String,List<List<String>>> readyToWriteIn = new HashMap<String,List<List<String>>>();
+		
 		// 读取完整excel文件
 		List<List<String>> rawData = ExcelReader.read(fileName);
 		// 读取excel文件的指定一列
@@ -94,9 +109,21 @@ public class NativeBayes {
 		for (int i = 0; i < segList.size(); i++) {
 			// 对该条数据利用训练集进行分类，返回类的索引
 			int ci = classifySingleData(segList.get(i));
+			String ciName = "result/classify/分类结果/" + clusterInfo.getClustersName().get(ci);
+			List<List<String>> value = readyToWriteIn.get(ciName);
+			if(value == null){
+				value = new ArrayList<List<String>>();
+				readyToWriteIn.put(ciName, value);
+			}
+			value.add(rawData.get(i));
+			readyToWriteIn.put(ciName, value);
 			// 将该条数据写入对应的类excel
-			ExcelWriter.rowListToExcel("result/classify/" + clusterInfo.getClustersName().get(ci), rawData.get(i));
 		}
+		
+		for(Map.Entry<String, List<List<String>>> entry:readyToWriteIn.entrySet()){
+			ExcelWriter.twolistToExcel(entry.getKey(), entry.getValue());
+		}
+		
 	}
 
 }

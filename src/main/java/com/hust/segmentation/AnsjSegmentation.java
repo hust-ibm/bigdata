@@ -28,8 +28,8 @@ public class AnsjSegmentation {
 		List<String> list = new TxtReader().getDataFromTxt(stopWordsPath);
 		filter = new StopRecognition();
 		filter.insertStopWords(list);
-//		filter.insertStopNatures("m");
-//		filter.insertStopNatures("en");
+		// filter.insertStopNatures("m");
+		// filter.insertStopNatures("en");
 		System.out.println("停用词加载成功！");
 	}
 	// 添加用户自定义词典
@@ -61,7 +61,7 @@ public class AnsjSegmentation {
 			Result result = new Result(null);
 			// 用精准分词模式得到一个未过滤的记过
 			result = DicAnalysis.parse(word);
-			if(result.size() == 0){
+			if (result.size() == 0) {
 				segList.add(new String[] {});
 				continue;
 			}
@@ -69,7 +69,7 @@ public class AnsjSegmentation {
 			listWithoutFilter.add(result.toStringWithOutNature().split(","));
 			// 过滤停用词
 			result = result.recognition(filter);
-			if(result.size() == 0){
+			if (result.size() == 0) {
 				segList.add(new String[] {});
 				continue;
 			}
@@ -105,11 +105,12 @@ public class AnsjSegmentation {
 		return result.toStringWithOutNature();
 	}
 
-	//获取分词后的词语集合
+	// 获取分词后的词语集合
 	public List<String[]> getSegList() {
 		return segList;
 	}
-	//设置要分词的文档集合
+
+	// 设置要分词的文档集合
 	public void setWordList(List<String> wordList) {
 		this.wordList = wordList;
 	}
