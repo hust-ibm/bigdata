@@ -8,7 +8,7 @@ public class BayesTestingTest {
 	public static void main(String[] args) {
 		NativeBayes bayes = new NativeBayes();
 		// 对cluster目录下的若干类进行训练
-		bayes.training("result/classify/TrainingSet",1);
+		bayes.training("result/classify/测试集",1);
 		TxtWriter.writePriorPRToTxt(bayes.getClusterInfo(), bayes.getPriorPRsOfCluster());
 		TxtWriter.writeWordConditionalPRToTxt(bayes.getWordConitionalPRMap());
 		// 利用训练集的结果对test.xls文件里的数据进行分类
