@@ -3,11 +3,12 @@ package crawl;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 
+
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
 import org.jsoup.nodes.Document;
 
-
+import com.hust.utils.DB;
 
 /**
  * Crawling news from hfut news
@@ -25,16 +26,14 @@ public class Qianchengwuyou extends BreadthCrawler {
 	
     public Qianchengwuyou(String crawlPath, boolean autoParse) {
     	
-    //	proxys.add();
-    	
         super(crawlPath, autoParse);
         /*种子页面*/
-       // this.addSeed("http://news.hfut.edu.cn/list-1-1.html");
-        this.addSeed("http://search.51job.com/jobsearch/search_result.php?fromJs=1&keyword=%E5%A4%A7%E6%95%B0%E6%8D%AE&keywordtype=2&lang=c&stype=2&postchannel=0000&fromType=1&confirmdate=9");
-
+        // 程序的入口，也是第一个爬取的网站;
+        this.addSeed("http://www.51job.com/");
         /*正则规则设置*/
-        /*爬取符合 http://news.hfut.edu.cn/show-xxxxxxhtml的URL*/
-        this.addRegex("http://jobs.51job.com/.*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].html.*");
+        //爬取符合 http://jobs.51job.com/.*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].html.*的网站
+        this.addRegex("http://jobs.51job.com/.*/[0-9][0-9]"
+        		+ "[0-9][0-9][0-9][0-9][0-9][0-9].html.*");
         /*不要爬取 jpg|png|gif*/
         this.addRegex("-.*\\.(jpg|png|gif).*");
         /*不要爬取包含 # 的URL*/
@@ -43,44 +42,50 @@ public class Qianchengwuyou extends BreadthCrawler {
 
     public void visit(Page page, CrawlDatums next) {
         String url = page.getUrl();
-        /*判断是否为新闻页，通过正则可以轻松判断*/
-        if (page.matchUrl("http://jobs.51job.com/.*/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].html.*")) {
-            /*we use jsoup to parse page*/
-            Document doc = page.getDoc();
-
-            /*extract title and content of news by css selector*/
-            String title = page.select("div[class=cn]>h1").text();
-          //  String content = page.select("article[class=article-content]").text();
-          //  String author = page.select("span[class=glyphicon glyphicon-user]").text();
-
-            System.out.println("URL:\n" + url);
-            System.out.println("title:\n" + title);
-            String sql = "insert into qianchengwuyou(title) values('"+title+"')";
-			
-            /*如果你想添加新的爬取任务，可以向next中添加爬取任务，
-               这就是上文中提到的手动解析*/
-            /*WebCollector会自动去掉重复的任务(通过任务的key，默认是URL)，
-              因此在编写爬虫时不需要考虑去重问题，加入重复的URL不会导致重复爬取*/
-            /*如果autoParse是true(构造函数的第二个参数)，爬虫会自动抽取网页中符合正则规则的URL，
-              作为后续任务，当然，爬虫会去掉重复的URL，不会爬取历史中爬取过的URL。
-              autoParse为true即开启自动解析机制*/
-            //next.add("http://xxxxxx.com");
+        /*判断是否是目标网页，网页的URL规律可以通过观察得出。并用则正表达式过滤*/
+        if (page.matchUrl("http://jobs.51job.com/.*/[0-9][0-9][0-9]"
+        		+ "[0-9][0-9][0-9][0-9][0-9].html.*")) {
+            /*使用CSS选择器提取信息*/
+            String title = page.select("div.cn>h1").text();   //职位名称
+            String companyName = page.select("p.cname").text();  //公司名称
+            String jobBenefits = page.select("p.t2").text();   //职位福利
+            String salary = page.select("div.cn>strong").text();  //薪资
+            String jobInformation = page.select("div.job_msg").text();  //职位信息     
+            String place = page.select("span.lname").text();  //工作地点
+           //格式为：民营公司   |  50-150人   |  计算机软件
+            String information = page.select("p.ltype").text();  
+            String[] names = information.split("\\|"); //以|为标志分割字符串
+            String field = names[0]; //公司领域
+            String type = names[1];  //公司性质
+            String scale = names[2];// 公司规模
+            //sql插入语句
+   /*         String sql = "insert into qianchengwuyou(url,title,companyName,"
+            		+ "jobBenefits,salary,jobInformation,place,field,type,scale)"
+            		+ "values('"+url+"','"+title+"','"+companyName+"','"+jobBenefits+"'"
+            				+ ",'"+salary+"','"+jobInformation+"','"+place+"','"+field+"',"
+            						+ "'"+type+"','"+scale+"')";  */
+            String sql = "insert into fenlei(title,content)values('"+title+"','"+jobInformation+"')";
+			DB db = new DB();
+			db.open(sql);
+			db.close();
         }
     }
     
     
     public static void main(String[] args) throws Exception {
+     
+     /*如果autoParse是true(构造函数的第二个参数)，爬虫会自动抽取网页中符合正则规则的URL，
+           作为后续任务，当然，爬虫会去掉重复的URL，不会爬取历史中爬取过的URL。
+       autoParse为true即开启自动解析机制*/
     	Qianchengwuyou crawler = new Qianchengwuyou("crawl", true);
         /*线程数*/
         crawler.setThreads(500);
         /*设置每次迭代中爬取数量的上限*/
         crawler.setTopN(50000);
         
-      
-        /*可以设置每个线程visit的间隔，这里是毫秒*/
-    //    crawler.setExecuteInterval(10000);
-       
-        
+        /*可以设置每个线程visit的间隔，这里是毫秒。主要用于具有反爬虫机制的网站*/
+      // crawler.setExecuteInterval(10000);
+         
         /*设置是否为断点爬取，如果设置为false，任务启动前会清空历史数据。
            如果设置为true，会在已有crawlPath(构造函数的第一个参数)的基础上继
            续爬取。对于耗时较长的任务，很可能需要中途中断爬虫，也有可能遇到

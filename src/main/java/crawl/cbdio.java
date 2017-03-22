@@ -7,6 +7,8 @@ import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
 
 import org.jsoup.nodes.Document;
 
+import com.hust.utils.DB;
+
 
 
 /**
@@ -46,17 +48,19 @@ public class cbdio extends BreadthCrawler {
         /*判断是否为新闻页，通过正则可以轻松判断*/
         if (page.matchUrl("http://www.cbdio.com/BigData/.*/.*/content_.*")) {
             /*we use jsoup to parse page*/
-            Document doc = page.getDoc();
-
             /*extract title and content of news by css selector*/
             String title = page.select("h1[class=cb-article-title]").text();
-          //  String content = page.select("article[class=article-content]").text();
-          //  String author = page.select("span[class=glyphicon glyphicon-user]").text();
-
+            //所有的p标签里的文字
+            String content = page.select("p").text();
+                 
             System.out.println("URL:\n" + url);
             System.out.println("title:\n" + title);
-            String sql = "insert into cbdio(title) values('"+title+"')";
-			
+            System.out.println("content:\n" + content);
+          
+            String sql = "insert into fenlei(title,content) values('"+title+"','"+content+"')";
+			DB db = new DB();
+			db.open(sql);
+			db.close();
 
             /*如果你想添加新的爬取任务，可以向next中添加爬取任务，
                这就是上文中提到的手动解析*/
