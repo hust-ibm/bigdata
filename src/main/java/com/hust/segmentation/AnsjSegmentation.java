@@ -1,19 +1,12 @@
 package com.hust.segmentation;
 
-import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ansj.domain.Result;
-import org.ansj.domain.Term;
 import org.ansj.library.DicLibrary;
-import org.ansj.library.StopLibrary;
-import org.ansj.recognition.Recognition;
-import org.ansj.recognition.arrimpl.UserDefineRecognition;
 import org.ansj.recognition.impl.StopRecognition;
 import org.ansj.splitWord.analysis.DicAnalysis;
-import org.ansj.splitWord.analysis.NlpAnalysis;
-import org.ansj.splitWord.analysis.ToAnalysis;
 
 import com.hust.utils.Config;
 import com.hust.utils.TxtReader;
@@ -35,6 +28,8 @@ public class AnsjSegmentation {
 		List<String> list = new TxtReader().getDataFromTxt(stopWordsPath);
 		filter = new StopRecognition();
 		filter.insertStopWords(list);
+//		filter.insertStopNatures("m");
+//		filter.insertStopNatures("en");
 		System.out.println("停用词加载成功！");
 	}
 	// 添加用户自定义词典
@@ -66,6 +61,10 @@ public class AnsjSegmentation {
 			Result result = new Result(null);
 			// 用精准分词模式得到一个未过滤的记过
 			result = DicAnalysis.parse(word);
+			if(result.size() == 0){
+				segList.add(new String[] {});
+				continue;
+			}
 			// 将result去掉词性后（toStringWithOutNature）按（","）切分为一个一个的单词
 			listWithoutFilter.add(result.toStringWithOutNature().split(","));
 			// 过滤停用词
@@ -106,10 +105,11 @@ public class AnsjSegmentation {
 		return result.toStringWithOutNature();
 	}
 
+	//获取分词后的词语集合
 	public List<String[]> getSegList() {
 		return segList;
 	}
-
+	//设置要分词的文档集合
 	public void setWordList(List<String> wordList) {
 		this.wordList = wordList;
 	}
