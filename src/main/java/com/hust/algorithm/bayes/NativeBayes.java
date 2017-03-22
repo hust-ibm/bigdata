@@ -96,7 +96,6 @@ public class NativeBayes {
 	 */
 	public void classify(String fileName, int index) {
 		HashMap<String,List<List<String>>> readyToWriteIn = new HashMap<String,List<List<String>>>();
-		
 		// 读取完整excel文件
 		List<List<String>> rawData = ExcelReader.read(fileName);
 		// 读取excel文件的指定一列
@@ -119,11 +118,8 @@ public class NativeBayes {
 			readyToWriteIn.put(ciName, value);
 			// 将该条数据写入对应的类excel
 		}
-		
 		for(Map.Entry<String, List<List<String>>> entry:readyToWriteIn.entrySet()){
 			ExcelWriter.twolistToExcel(entry.getKey(), entry.getValue());
 		}
-		
 	}
-
 }

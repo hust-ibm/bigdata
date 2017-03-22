@@ -71,6 +71,10 @@ public class ExcelWriter {
 				e.printStackTrace();
 			} 
         }else{
+        	File dir = new File("result/classify/分类结果");
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
         	//文件不存在，新建的文件 判断文件类型
         	if (fileName.endsWith("xls")) {
 				wb = new HSSFWorkbook();
