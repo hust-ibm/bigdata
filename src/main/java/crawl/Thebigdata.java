@@ -1,16 +1,8 @@
 package crawl;
 
-import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
-import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
-import cn.edu.hfut.dmic.webcollector.net.Proxys;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jsoup.nodes.Document;
 

@@ -1,22 +1,18 @@
 package com.hust.utils;
-
 import java.sql.Connection;  
-
 import java.sql.DriverManager;  
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement; 
-
 public class DB {  
+	//数据库的地址，本机一般为localhost。crawl为数据库的名称
     public static final String url = "jdbc:mysql://localhost:3306/crawl";  
     public static final String name = "com.mysql.jdbc.Driver";  
+    //用户名
     public static final String user = "root";  
+    //密码
     public static final String password = "root";  
-  
     public static Connection conn = null;  
-
-    
+    //关闭连接
     public void close() {  
         try {  
             this.conn.close();   
@@ -24,7 +20,7 @@ public class DB {
             e.printStackTrace();  
         }  
     }  
-  
+   //建立连接
     public void open(String sql)
     {
         try {  
@@ -32,25 +28,11 @@ public class DB {
             conn = DriverManager.getConnection(url, user, password);//获取连接  
             Statement st = conn.createStatement();
             System.out.println("成功连接数据库");
+            //执行sql语句
             int rs = st.executeUpdate(sql);
-     /*       String sql = "select * from user";
-            String ss="insert into user(name,pwd) values('"+user.getName()+"','"+user.getPwd()+"')";
-            String s="insert into user(username) values('eeeee')";
-            
-            int rs = st.executeUpdate(s);
-            ResultSet r = st.executeQuery(sql);
-            
-            while(r.next())
-            {
-            	System.out.println(r.getString("username"));
-            }*/
             
         } catch (Exception e) {  
             e.printStackTrace();  
         }  
     } 
-    
-   
-    
-    
 }  
