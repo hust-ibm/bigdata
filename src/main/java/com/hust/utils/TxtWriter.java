@@ -23,7 +23,7 @@ public class TxtWriter {
 			FileWriter fw = new FileWriter(file, false);
 			PrintWriter pw = new PrintWriter(fw);
 			for (int i = 0; i < priorPRsOfCluster.length; i++) {
-				pw.print(clusterInfo.getClustersName().get(i) + ":\t\t");
+				pw.print(clusterInfo.getClustersName().get(i) + "\t");
 				pw.println(String.valueOf(priorPRsOfCluster[i]));
 			}
 			pw.close();
@@ -46,9 +46,9 @@ public class TxtWriter {
 			FileWriter fw = new FileWriter(file, false);
 			PrintWriter pw = new PrintWriter(fw);
 			for (Map.Entry<String, double[]> map : wordConditionalPRMap.entrySet()) {
-				pw.print(map.getKey()+"\t\t\t");
+				pw.print(map.getKey()+"\t");
 				for(double d:map.getValue()){
-					pw.print(String.valueOf(d)+"\t\t");
+					pw.print(String.valueOf(d)+"\t");
 				}
 				pw.println();
 			}
