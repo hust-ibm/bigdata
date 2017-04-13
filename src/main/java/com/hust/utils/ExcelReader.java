@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -57,6 +58,7 @@ public class ExcelReader {
 							rowList.add("");
 						} else {
 							try{
+								row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);
 								rowList.add(row.getCell(j).getStringCellValue());
 							}catch(Exception e){
 								continue;
@@ -130,6 +132,7 @@ public class ExcelReader {
 				}
 
 				if (row.getCell(index) != null) {
+					row.getCell(index).setCellType(Cell.CELL_TYPE_STRING);
 					content.add(row.getCell(index).getStringCellValue());
 				} else {
 					content.add("");
